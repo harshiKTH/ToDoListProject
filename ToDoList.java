@@ -1,19 +1,19 @@
 import java.util.ArrayList;
 
 public class ToDoList implements  List {
-    ArrayList<ListItem> listItems = new ArrayList<>();
-    String listDescription = "";
+    private ArrayList<ListItem> listItems = new ArrayList<>();
+    private String listDescription = "";
 
     @Override
     public boolean addItem(ListItem listItem) {
-        listItems.add(listItem);
+        getListItems().add(listItem);
         return false;
     }
 
     @Override
     public boolean removeItem(int position) {
         try {
-            listItems.remove(position);
+            getListItems().remove(position);
             return true;
         }catch (Exception e) {
             return false;
@@ -33,6 +33,22 @@ public class ToDoList implements  List {
 
     @Override
     public int listCount() {
-        return listItems.size();
+        return getListItems().size();
+    }
+
+    public ArrayList<ListItem> getListItems() {
+        return listItems;
+    }
+
+    public void setListItems(ArrayList<ListItem> listItems) {
+        this.listItems = listItems;
+    }
+
+    public String getListDescription() {
+        return listDescription;
+    }
+
+    public void setListDescription(String listDescription) {
+        this.listDescription = listDescription;
     }
 }

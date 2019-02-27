@@ -6,13 +6,15 @@ import java.util.ArrayList;
 public class ListController extends UserInterface {
 
     private ToDoList toDoList;
-    private FileListStore fileListStore;
+    private static ListItemStorageController listItemStorageController;
     private static ListController listController;
 
 
     public static void main(String args[]) {
         listController = new ListController();
         listController.toDoList = new ToDoList();
+        listItemStorageController = new ListItemStorageController();
+        listController.toDoList.setListItems(listItemStorageController.loadList());
         boolean isQuit = false;
         String userInput;
 
@@ -21,8 +23,9 @@ public class ListController extends UserInterface {
             System.out.println("You have total " + listController.toDoList.listCount()+ " task to do");
             listController.userMenu();
             userInput = listController.getUserInput("Enter your option");
-            if (userInput.equals("0")) {
+            if (userInput.equals("0") || userInput.equalsIgnoreCase("q")) {
                 isQuit = true;
+                listController.listItemStorageController.storeList(listController.toDoList.getListItems());
             } else if (userInput.equals("1")) { //Show user menu
                 listController.userMenu();
             } else if (userInput.equals("2")) { //Add list item to the list
@@ -32,10 +35,12 @@ public class ListController extends UserInterface {
             } else if (userInput.equals("4")) { //Edit list item
                 listController.editItem(Integer.parseInt(listController.getUserInput("Enter item number to edit :")));
             } else if (userInput.equals("5")) { //Show all list items
-                listController.printList(listController.toDoList.listItems);
+                listController.printList(listController.toDoList.getListItems());
             } else if (userInput.equals("6")) { //Mark a task status to done
                 listController.markTaskDone(Integer.parseInt(listController.getUserInput("Enter the task number :")));
-            }
+            } else if (userInput.equals("7")) { //Store the list items
+                listController.listItemStorageController.storeList(listController.toDoList.getListItems());
+        }
 
 
         }
@@ -56,9 +61,9 @@ public class ListController extends UserInterface {
     private boolean editItem(int editItemNum){
         ListItem tempListItem = new ListItem();
        try {
-           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.listItems.get(editItemNum-1).getTask() + ")"));
-           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.listItems.get(editItemNum-1).getDueDate()+ ")")));
-           listController.toDoList.listItems.set(editItemNum-1,tempListItem);
+           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.getListItems().get(editItemNum-1).getTask() + ")"));
+           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.getListItems().get(editItemNum-1).getDueDate()+ ")")));
+           listController.toDoList.getListItems().set(editItemNum-1,tempListItem);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +72,7 @@ public class ListController extends UserInterface {
     }
 
     private void removeListItem(){
-        listController.printList(listController.toDoList.listItems);
+        listController.printList(listController.toDoList.getListItems());
         int pos = Integer.parseInt(listController.getUserInput("Enter list item to delete :"));
         if(pos > 0 && pos <= listController.toDoList.listCount())
             listController.toDoList.removeItem(pos-1);
@@ -77,7 +82,9 @@ public class ListController extends UserInterface {
 
     private boolean markTaskDone(int taskNumber){
         try {
-            listController.toDoList.listItems.get(taskNumber - 1).setStatus(Constants.STATUS_DONE);
+            ArrayList<ListItem> tmpList=listController.toDoList.getListItems();
+            tmpList.get(taskNumber-1).setStatus(Constants.STATUS_DONE);
+            listController.toDoList.setListItems(tmpList);
             return true;
         }catch (Exception e){
             return false;
@@ -102,7 +109,8 @@ public class ListController extends UserInterface {
                 "(4) Edit List Item\n " +
                 "(5) Show List Items\n " +
                 "(6) Mark a task completed\n " +
-                "(0) Quit\n ");
+                "(7) Save Current List\n " +
+                "(0|Q|q) Quit\n ");
     }
 
     @Override

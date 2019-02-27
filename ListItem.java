@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public  class ListItem {
+public  class ListItem implements Serializable{
 
     private Date dueDate = null;
     private String task = null;
