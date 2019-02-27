@@ -10,7 +10,7 @@ public abstract class UserInterface {
     }
     public String getUserInput(String question ){
         System.out.println(question);
-        return scanner.next();
+        return scanner.nextLine();
     }
 
     public abstract boolean clearScreen();

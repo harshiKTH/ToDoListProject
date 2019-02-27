@@ -56,8 +56,8 @@ public class ListController extends UserInterface {
     private boolean editItem(int editItemNum){
         ListItem tempListItem = new ListItem();
        try {
-           tempListItem.setTask(listController.getUserInput("Update Task " + listController.toDoList.listItems.get(editItemNum-1).getTask()));
-           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\"" + listController.toDoList.listItems.get(editItemNum-1).getDueDate())));
+           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.listItems.get(editItemNum-1).getTask() + ")"));
+           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.listItems.get(editItemNum-1).getDueDate()+ ")")));
            listController.toDoList.listItems.set(editItemNum-1,tempListItem);
         }
         catch (Exception e) {
