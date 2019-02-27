@@ -28,6 +28,7 @@ public class ListController extends UserInterface {
             if (userInput.equals("0") || userInput.equalsIgnoreCase("q")) {
                 isQuit = true;
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
+                System.exit(0);
             } else if (userInput.equals("1")) { //Show user menu
                 listController.userMenu();
             } else if (userInput.equals("2")) { //Add list item to the list
