@@ -3,8 +3,21 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ListItemStorageController extends ListItemsStorage {
-    URL url = getClass().getResource("listItems.txt");
-    File file = new File(url.getPath());
+
+    URL url ;
+    File file = null;
+
+    public ListItemStorageController() throws IOException {
+        String directory=System.getProperty("user.dir");
+        //URL url = getClass().getResource("FileStore");
+        try {
+            file = new File(directory + "FileStore");
+        }catch (Exception e){
+            file.createNewFile();
+        }
+
+
+    }
 
     @Override
     boolean storeList(ArrayList<ListItem> listItems) {
@@ -44,14 +57,17 @@ public class ListItemStorageController extends ListItemsStorage {
     ArrayList<ListItem> loadList() {
         FileInputStream fis = null;
         boolean isSuccess=true;
+        ObjectInputStream ois = null;
         ArrayList<ListItem> result = new ArrayList<ListItem>();
+
         try {
             fis = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             isSuccess=false;
-            e.printStackTrace();
+            return result;
+
         }
-        ObjectInputStream ois = null;
+
         try {
             ois = new ObjectInputStream(fis);
         } catch (IOException e) {
@@ -60,6 +76,7 @@ public class ListItemStorageController extends ListItemsStorage {
         }
         try {
             result = (ArrayList<ListItem>) ois.readObject();
+            return result;
         } catch (IOException e) {
             isSuccess=false;
             e.printStackTrace();

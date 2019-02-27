@@ -41,6 +41,7 @@ public class ToDoList implements  List {
     }
 
     public void setListItems(ArrayList<ListItem> listItems) {
+        this.listItems=null;
         this.listItems = listItems;
     }
 

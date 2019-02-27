@@ -5,9 +5,11 @@ public  class ListItem implements Serializable{
 
     private Date dueDate = null;
     private String task = null;
+    String status="";
 
-    private static String status = Constants.STATUS_PENDING;
-
+    public ListItem(){
+        this.status = Constants.STATUS_PENDING;
+    }
     public  String getStatus() {
         return status;
     }

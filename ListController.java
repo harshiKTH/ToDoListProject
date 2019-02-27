@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class ListController extends UserInterface {
     private static ListController listController;
 
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
         listController = new ListController();
         listController.toDoList = new ToDoList();
         listItemStorageController = new ListItemStorageController();
@@ -18,11 +19,12 @@ public class ListController extends UserInterface {
         boolean isQuit = false;
         String userInput;
 
+        System.out.println("\nYou have total " + listController.toDoList.listCount()+ " task to do");
+
 
         while (!isQuit) {
-            System.out.println("You have total " + listController.toDoList.listCount()+ " task to do");
             listController.userMenu();
-            userInput = listController.getUserInput("Enter your option");
+            userInput = listController.getUserInput("\nEnter your choice : ");
             if (userInput.equals("0") || userInput.equalsIgnoreCase("q")) {
                 isQuit = true;
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
@@ -85,6 +87,7 @@ public class ListController extends UserInterface {
             ArrayList<ListItem> tmpList=listController.toDoList.getListItems();
             tmpList.get(taskNumber-1).setStatus(Constants.STATUS_DONE);
             listController.toDoList.setListItems(tmpList);
+
             return true;
         }catch (Exception e){
             return false;
@@ -103,7 +106,7 @@ public class ListController extends UserInterface {
 
     @Override
     public void userMenu() {
-        System.out.print(" (1) Show Menu\n " +
+        System.out.print("\n (1) Show Menu\n " +
                 "(2) Add List Item\n " +
                 "(3) Remove List Item\n " +
                 "(4) Edit List Item\n " +
