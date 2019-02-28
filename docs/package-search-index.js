@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.todolist.abstractclasses"},{"l":"com.todolist.controller"},{"l":"com.todolist.interfaces"},{"l":"com.todolist.literals"},{"l":"com.todolist.object"}]
