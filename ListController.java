@@ -85,9 +85,14 @@ public class ListController extends UserInterface {
 
     private boolean markTaskDone(int taskNumber){
         try {
-            ArrayList<ListItem> tmpList=listController.toDoList.getListItems();
-            tmpList.get(taskNumber-1).setStatus(Constants.STATUS_DONE);
-            listController.toDoList.setListItems(tmpList);
+            //ArrayList<ListItem> tmpList=listController.toDoList.getListItems();
+            //tmpList.get(taskNumber-1).setStatus(Constants.STATUS_DONE);
+            //listController.toDoList.setListItems(tmpList);
+            ListItem tempListItem = new ListItem();
+            tempListItem=listController.toDoList.getListItems().get(taskNumber-1);
+            tempListItem.setStatus(Constants.STATUS_DONE);
+            listController.toDoList.getListItems().set(taskNumber-1,tempListItem);
+
 
             return true;
         }catch (Exception e){
