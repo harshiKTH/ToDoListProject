@@ -2,8 +2,6 @@ import java.util.ArrayList;
 
 public class ToDoList implements  List {
     private ArrayList<ListItem> listItems = new ArrayList<>();
-    private String listDescription = "";
-
     @Override
     public boolean addItem(ListItem listItem) {
         getListItems().add(listItem);
@@ -22,13 +20,14 @@ public class ToDoList implements  List {
     }
 
     @Override
-    public ListItem editItem(int position) {
+    public ListItem editItem(int position,ListItem listItem) {
+        this.listItems.set(position-1,listItem);
         return null;
     }
 
     @Override
     public ListItem getItem(int position) {
-        return null;
+        return listItems.get(position);
     }
 
     @Override
@@ -45,11 +44,4 @@ public class ToDoList implements  List {
         this.listItems = listItems;
     }
 
-    public String getListDescription() {
-        return listDescription;
-    }
-
-    public void setListDescription(String listDescription) {
-        this.listDescription = listDescription;
-    }
 }

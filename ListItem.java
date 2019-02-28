@@ -1,11 +1,16 @@
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public  class ListItem implements Serializable{
 
     private Date dueDate = null;
     private String task = null;
     String status="";
+    Locale locale = new Locale("en", "US");
+    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+
 
     public ListItem(){
         this.status = Constants.STATUS_PENDING;
@@ -14,8 +19,10 @@ public  class ListItem implements Serializable{
         return status;
     }
 
-    public Date getDueDate() {
-        return dueDate;
+    public String getDueDate() {
+
+        String date = dateFormat.format(dueDate);
+        return date;
     }
 
     public void setDueDate(Date dueDate) {
@@ -33,4 +40,5 @@ public  class ListItem implements Serializable{
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

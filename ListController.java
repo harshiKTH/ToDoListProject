@@ -36,12 +36,15 @@ public class ListController extends UserInterface {
             } else if (userInput.equals("3")) { //Remove list item
                 listController.removeListItem();
             } else if (userInput.equals("4")) { //Edit list item
-                listController.editItem(Integer.parseInt(listController.getUserInput("Enter item number to edit :")));
+                listController.editListItem(Integer.parseInt(listController.getUserInput("Enter item number to edit :")));
             } else if (userInput.equals("5")) { //Show all list items
                 listController.printList(listController.toDoList.getListItems());
             } else if (userInput.equals("6")) { //Mark a task status to done
-                listController.markTaskDone(Integer.parseInt(listController.getUserInput("Enter the task number :")));
-            } else if (userInput.equals("7")) { //Store the list items
+                listController.markListItemDone(Integer.parseInt(listController.getUserInput("Enter the task number :")));
+            } else if (userInput.equals("7")) { //Mark a task status to not done
+                listController.markListItemPending(Integer.parseInt(listController.getUserInput("Enter the task number :")));
+            }
+            else if (userInput.equals("8")) { //Store the list items
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
         }
 
@@ -56,20 +59,20 @@ public class ListController extends UserInterface {
         tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Enter task date \"dd/MM/yyyy\"")));
         listController.toDoList.addItem(tempListItem);
         }
-    catch (ParseException e) {
-        e.printStackTrace();
+    catch (Exception e) {
+        System.out.println("Invalid data format entered");
         }
     }
 
-    private boolean editItem(int editItemNum){
+    private boolean editListItem(int listItemNum){
         ListItem tempListItem = new ListItem();
        try {
-           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.getListItems().get(editItemNum-1).getTask() + ")"));
-           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.getListItems().get(editItemNum-1).getDueDate()+ ")")));
-           listController.toDoList.getListItems().set(editItemNum-1,tempListItem);
+           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.getItem(listItemNum-1).getTask() + ")"));
+           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.getItem(listItemNum-1).getDueDate()+ ")")));
+           listController.toDoList.editItem(listItemNum,tempListItem);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Invalid data format entered!!!");
         }
         return true;
     }
@@ -83,17 +86,24 @@ public class ListController extends UserInterface {
             System.out.println("Number entered not in range \n" + "##############################");
     }
 
-    private boolean markTaskDone(int taskNumber){
+    private boolean markListItemDone(int listItemNum){
         try {
-            //ArrayList<ListItem> tmpList=listController.toDoList.getListItems();
-            //tmpList.get(taskNumber-1).setStatus(Constants.STATUS_DONE);
-            //listController.toDoList.setListItems(tmpList);
-            ListItem tempListItem = new ListItem();
-            tempListItem=listController.toDoList.getListItems().get(taskNumber-1);
+            ListItem tempListItem;
+            tempListItem=listController.toDoList.getItem(listItemNum-1);
             tempListItem.setStatus(Constants.STATUS_DONE);
-            listController.toDoList.getListItems().set(taskNumber-1,tempListItem);
+            listController.toDoList.editItem(listItemNum,tempListItem);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
-
+    private boolean markListItemPending(int listItemNum){
+        try {
+            ListItem tempListItem;
+            tempListItem=listController.toDoList.getItem(listItemNum-1);
+            tempListItem.setStatus(Constants.STATUS_PENDING);
+            listController.toDoList.editItem(listItemNum,tempListItem);
             return true;
         }catch (Exception e){
             return false;
@@ -118,7 +128,8 @@ public class ListController extends UserInterface {
                 "(4) Edit List Item\n " +
                 "(5) Show List Items\n " +
                 "(6) Mark a task completed\n " +
-                "(7) Save Current List\n " +
+                "(7) Mark a task not completed\n "+
+                "(8) Save Current List\n " +
                 "(0|Q|q) Quit\n ");
     }
 
@@ -126,13 +137,12 @@ public class ListController extends UserInterface {
     public void printList(ArrayList<ListItem> arrayList) {
         int listNumber = 1;
         System.out.println("*****************************************************************************");
-        System.out.printf("%-2s %-30s %-10s %-30s","TASK#", "DUE DATE", "STATUS", "TASK NAME");
+        System.out.printf("%-2s %-15s %-10s %-30s","TASK#", "DUE DATE", "STATUS", "TASK NAME");
         System.out.print("\n");
         System.out.println("*****************************************************************************");
         System.out.print("\n");
         for (ListItem listItem : arrayList) {
-            //System.out.println( "(" + listNumber++ + ")"+  "\tTask Name : " + listItem.getTask() + "\tDue Date : " +listItem.getDueDate() + "\tStatus : " +listItem.getStatus());
-            System.out.printf("%-5s %-30s %-10s %-30s", listNumber++, listItem.getDueDate(),listItem.getStatus(), listItem.getTask() + "\n");
+            System.out.printf("%-5s %-15s %-10s %-30s", listNumber++, listItem.getDueDate(),listItem.getStatus(), listItem.getTask() + "\n");
             System.out.print("\n");
         }
         System.out.println();

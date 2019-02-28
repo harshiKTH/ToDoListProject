@@ -9,13 +9,13 @@ public class ListItemStorageController extends ListItemsStorage {
 
     public ListItemStorageController() throws IOException {
         String directory=System.getProperty("user.dir");
-        //URL url = getClass().getResource("FileStore");
+
         try {
             file = new File(directory + "FileStore");
         }catch (Exception e){
             file.createNewFile();
         }
-
+        System.out.println(file.getAbsolutePath());
 
     }
 
