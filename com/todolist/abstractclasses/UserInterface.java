@@ -1,3 +1,7 @@
+package com.todolist.abstractclasses;
+
+import com.todolist.object.ListItem;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

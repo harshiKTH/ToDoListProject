@@ -1,4 +1,6 @@
+package com.todolist.interfaces;
 
+import com.todolist.object.ListItem;
 
 public interface List {
 

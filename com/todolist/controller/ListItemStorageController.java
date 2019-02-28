@@ -1,6 +1,10 @@
+package com.todolist.controller;
+
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import com.todolist.object.ListItem;
+import com.todolist.abstractclasses.ListItemsStorage;
 
 public class ListItemStorageController extends ListItemsStorage {
 
@@ -20,7 +24,7 @@ public class ListItemStorageController extends ListItemsStorage {
     }
 
     @Override
-    boolean storeList(ArrayList<ListItem> listItems) {
+    public boolean storeList(ArrayList<ListItem> listItems) {
         // write object to file
         FileOutputStream fos = null;
         boolean isSuccess=true;
@@ -54,7 +58,7 @@ public class ListItemStorageController extends ListItemsStorage {
     }
 
     @Override
-    ArrayList<ListItem> loadList() {
+    public ArrayList<ListItem> loadList() {
         FileInputStream fis = null;
         boolean isSuccess=true;
         ObjectInputStream ois = null;

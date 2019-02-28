@@ -1,6 +1,10 @@
+package com.todolist.object;
+
+import com.todolist.interfaces.List;
+
 import java.util.ArrayList;
 
-public class ToDoList implements  List {
+public class ToDoList implements List {
     private ArrayList<ListItem> listItems = new ArrayList<>();
     @Override
     public boolean addItem(ListItem listItem) {
