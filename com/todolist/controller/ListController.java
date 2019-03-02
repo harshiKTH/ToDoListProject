@@ -21,11 +21,12 @@ public class ListController extends UserInterface {
         listController = new ListController();
         listController.toDoList = new ToDoList();
         listItemStorageController = new ListItemStorageController();
+        // assign the list objects from the file store
         listController.toDoList.setListItems(listItemStorageController.loadList());
         boolean isQuit = false;
         String userInput;
 
-        System.out.println("\nYou have total " + listController.toDoList.listCount()+ " task to do");
+        System.out.println("\nWelcome toToDoly!!! \nYou have total " + listController.toDoList.listCount()+ " task to do");
 
 
         while (!isQuit) {
@@ -34,7 +35,7 @@ public class ListController extends UserInterface {
             if (userInput.equals("0") || userInput.equalsIgnoreCase("q")) {
                 isQuit = true;
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
-                System.exit(0);
+
             } else if (userInput.equals("1")) { //Show user menu
                 listController.userMenu();
             } else if (userInput.equals("2")) { //Add list item to the list
@@ -50,12 +51,13 @@ public class ListController extends UserInterface {
             } else if (userInput.equals("7")) { //Mark a task status to not done
                 listController.markListItemPending(Integer.parseInt(listController.getUserInput("Enter the task number :")));
             }
-            else if (userInput.equals("8")) { //Store the list items
+              else if (userInput.equals("8")) { //Store the list items
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
         }
 
 
         }
+        System.exit(0);
     }
 
     private void addListItem(){
@@ -152,6 +154,7 @@ public class ListController extends UserInterface {
             System.out.print("\n");
         }
         System.out.println();
+        //list.forEach(System.out::println);
 
     }
 }

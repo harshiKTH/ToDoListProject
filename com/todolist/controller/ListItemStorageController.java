@@ -19,7 +19,7 @@ public class ListItemStorageController extends ListItemsStorage {
         }catch (Exception e){
             file.createNewFile();
         }
-        System.out.println(file.getAbsolutePath());
+
 
     }
 
