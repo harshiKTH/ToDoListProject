@@ -3,13 +3,12 @@ package com.todolist.controller;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import com.todolist.object.ListItem;
 import com.todolist.abstractclasses.ListItemsStorage;
 
-public class ListItemStorageController extends ListItemsStorage {
+public class ListItemStorageController<E> extends ListItemsStorage<E> {
 
     URL url ;
-    File file = null;
+    private File file = null;
 
     public ListItemStorageController() throws IOException {
         String directory=System.getProperty("user.dir");
@@ -24,7 +23,7 @@ public class ListItemStorageController extends ListItemsStorage {
     }
 
     @Override
-    public boolean storeList(ArrayList<ListItem> listItems) {
+    public boolean storeList(ArrayList<E> listItems) {
         // write object to file
         FileOutputStream fos = null;
         boolean isSuccess=true;
@@ -58,11 +57,12 @@ public class ListItemStorageController extends ListItemsStorage {
     }
 
     @Override
-    public ArrayList<ListItem> loadList() {
+    public ArrayList<E> loadList() {
         FileInputStream fis = null;
         boolean isSuccess=true;
         ObjectInputStream ois = null;
-        ArrayList<ListItem> result = new ArrayList<ListItem>();
+        ArrayList<E> result = new ArrayList<E>();
+        System.out.println(file.getAbsolutePath());
 
         try {
             fis = new FileInputStream(file);
@@ -79,7 +79,7 @@ public class ListItemStorageController extends ListItemsStorage {
             e.printStackTrace();
         }
         try {
-            result = (ArrayList<ListItem>) ois.readObject();
+            result = (ArrayList<E>) ois.readObject();
             return result;
         } catch (IOException e) {
             isSuccess=false;

@@ -1,19 +1,20 @@
 package com.todolist.controller;
 
 import com.todolist.literals.Constants;
-import com.todolist.object.ListItem;
+import com.todolist.object.Task;
 import com.todolist.object.ToDoList;
 import com.todolist.abstractclasses.UserInterface;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
-public class ListController extends UserInterface {
+public class ListController<E> extends UserInterface<E> {
 
-    private ToDoList toDoList;
-    private static ListItemStorageController listItemStorageController;
+    private ToDoList <Task>toDoList;
+    private static ListItemStorageController<Task> listItemStorageController;
     private static ListController listController;
 
 
@@ -26,7 +27,8 @@ public class ListController extends UserInterface {
         boolean isQuit = false;
         String userInput;
 
-        System.out.println("\nWelcome toToDoly!!! \nYou have total " + listController.toDoList.listCount()+ " task to do");
+        System.out.println("\nWelcome toToDoly!!! \nYou have total of " + listController.toDoList.getListItems().size() + " and "
+                + listController.getNumItemsInList(Constants.STATUS_PENDING)+ " task to do");
 
 
         while (!isQuit) {
@@ -51,8 +53,14 @@ public class ListController extends UserInterface {
             } else if (userInput.equals("7")) { //Mark a task status to not done
                 listController.markListItemPending(Integer.parseInt(listController.getUserInput("Enter the task number :")));
             }
-              else if (userInput.equals("8")) { //Store the list items
-                listController.listItemStorageController.storeList(listController.toDoList.getListItems());
+            else if (userInput.equals("8")) { //Store the list items
+               if( listController.listItemStorageController.storeList(listController.toDoList.getListItems())){
+                   listController.notificationMessage("To do list saved successfully ...");
+               } else {
+                   listController.notificationMessage("To do list saving failure due to system error...");
+               }
+            }else if (userInput.equals("9")) { //Sort task by project
+            listController.sortTaskByProject(listController.getUserInput("Enter project name to sort  :"));
         }
 
 
@@ -61,11 +69,12 @@ public class ListController extends UserInterface {
     }
 
     private void addListItem(){
-    ListItem tempListItem = new ListItem();
+    Task tempTask = new Task();
     try {
-        tempListItem.setTask(listController.getUserInput("Enter Task"));
-        tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Enter task date \"dd/MM/yyyy\"")));
-        listController.toDoList.addItem(tempListItem);
+        tempTask.setProjectName(listController.getUserInput("Enter Project Name"));
+        tempTask.setTaskName(listController.getUserInput("Enter Task"));
+        tempTask.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Enter task date \"dd/MM/yyyy\"")));
+        listController.toDoList.addItem(tempTask);
         }
     catch (Exception e) {
         System.out.println("Invalid data format entered");
@@ -73,11 +82,14 @@ public class ListController extends UserInterface {
     }
 
     private boolean editListItem(int listItemNum){
-        ListItem tempListItem = new ListItem();
+        Task tempTask = new Task();
+        Task tempInTask;
        try {
-           tempListItem.setTask(listController.getUserInput("Update Task (" + listController.toDoList.getItem(listItemNum-1).getTask() + ")"));
-           tempListItem.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + listController.toDoList.getItem(listItemNum-1).getDueDate()+ ")")));
-           listController.toDoList.editItem(listItemNum,tempListItem);
+           tempInTask = (Task)listController.toDoList.getItem(listItemNum-1);
+           tempTask.setProjectName(listController.getUserInput("Update Project Name (" + tempInTask.getProjectName() + ")"));
+           tempTask.setTaskName(listController.getUserInput("Update Task (" + tempInTask.getTaskName() + ")"));
+           tempTask.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Update Task date \"dd/MM/yyyy\" (" + tempInTask.getDueDate()+ ")")));
+           listController.toDoList.editItem(listItemNum, tempTask);
         }
         catch (Exception e) {
             System.out.println("Invalid data format entered!!!");
@@ -87,19 +99,19 @@ public class ListController extends UserInterface {
 
     private void removeListItem(){
         listController.printList(listController.toDoList.getListItems());
-        int pos = Integer.parseInt(listController.getUserInput("Enter list item to delete :"));
-        if(pos > 0 && pos <= listController.toDoList.listCount())
-            listController.toDoList.removeItem(pos-1);
+        int position = Integer.parseInt(listController.getUserInput("Enter list item to delete :"));
+        if(position > 0 && position <= listController.toDoList.listCount())
+            listController.toDoList.removeItem(position-1);
         else
             System.out.println("Number entered not in range \n" + "##############################");
     }
 
     private boolean markListItemDone(int listItemNum){
         try {
-            ListItem tempListItem;
-            tempListItem=listController.toDoList.getItem(listItemNum-1);
-            tempListItem.setStatus(Constants.STATUS_DONE);
-            listController.toDoList.editItem(listItemNum,tempListItem);
+            Task tempTask;
+            tempTask = (Task) listController.toDoList.getItem(listItemNum-1);
+            tempTask.setStatus(Constants.STATUS_DONE);
+            listController.toDoList.editItem(listItemNum, tempTask);
             return true;
         }catch (Exception e){
             return false;
@@ -108,10 +120,10 @@ public class ListController extends UserInterface {
 
     private boolean markListItemPending(int listItemNum){
         try {
-            ListItem tempListItem;
-            tempListItem=listController.toDoList.getItem(listItemNum-1);
-            tempListItem.setStatus(Constants.STATUS_PENDING);
-            listController.toDoList.editItem(listItemNum,tempListItem);
+            Task tempTask;
+            tempTask = (Task) listController.toDoList.getItem(listItemNum-1);
+            tempTask.setStatus(Constants.STATUS_PENDING);
+            listController.toDoList.editItem(listItemNum, tempTask);
             return true;
         }catch (Exception e){
             return false;
@@ -138,23 +150,53 @@ public class ListController extends UserInterface {
                 "(6) Mark a task completed\n " +
                 "(7) Mark a task not completed\n "+
                 "(8) Save Current List\n " +
+                "(9) Sort task by project\n " +
                 "(0|Q|q) Quit\n ");
     }
 
     @Override
-    public void printList(ArrayList<ListItem> arrayList) {
+    public void printList(ArrayList<E> arrayList) {
         int listNumber = 1;
         System.out.println("*****************************************************************************");
-        System.out.printf("%-2s %-15s %-10s %-30s","TASK#", "DUE DATE", "STATUS", "TASK NAME");
+        System.out.printf("%-2s %-15s %-15s %-10s %-30s","TASK#", "PROJECT NAME", "DUE DATE", "STATUS", "TASK NAME");
         System.out.print("\n");
         System.out.println("*****************************************************************************");
         System.out.print("\n");
-        for (ListItem listItem : arrayList) {
-            System.out.printf("%-5s %-15s %-10s %-30s", listNumber++, listItem.getDueDate(),listItem.getStatus(), listItem.getTask() + "\n");
+        for (E listItem : arrayList) {
+            Task tmpTask = (Task) listItem;
+            System.out.printf("%-5s %-15s %-15s %-10s %-30s", listNumber++,tmpTask.getProjectName(), tmpTask.getDueDate(), tmpTask.getStatus(), tmpTask.getTaskName() + "\n");
             System.out.print("\n");
         }
         System.out.println();
         //list.forEach(System.out::println);
 
+    }
+
+    @Override
+    protected void sortTaskByProject(String userInput) {
+        Comparator<Task> comparator = new Comparator<Task>() {
+            @Override
+            public int compare(Task o1, Task o2) {
+
+                if(o1.getProjectName().equals(o2.getProjectName()))
+                    return 0;
+                else
+                    return -1;
+            }
+        };
+
+        listController.toDoList.getListItems().sort(comparator);
+    }
+
+    public int getNumItemsInList(String status){
+        int num=0;
+        for (int i=0; i< listController.toDoList.getListItems().size();i++) {
+            Task tmpTask = (Task)listController.toDoList.getListItems().get(i);
+            if(tmpTask.getStatus().contains(status)){
+                num++;
+            }
+
+        }
+        return num;
     }
 }

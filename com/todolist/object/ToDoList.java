@@ -4,10 +4,10 @@ import com.todolist.interfaces.List;
 
 import java.util.ArrayList;
 
-public class ToDoList implements List {
-    private ArrayList<ListItem> listItems = new ArrayList<>();
+public class ToDoList<E> implements List<E> {
+    private ArrayList<E> listItems = new ArrayList<>();
     @Override
-    public boolean addItem(ListItem listItem) {
+    public boolean addItem(E listItem) {
         getListItems().add(listItem);
         return false;
     }
@@ -24,13 +24,13 @@ public class ToDoList implements List {
     }
 
     @Override
-    public ListItem editItem(int position,ListItem listItem) {
+    public E editItem(int position,E listItem) {
         this.listItems.set(position-1,listItem);
         return null;
     }
 
     @Override
-    public ListItem getItem(int position) {
+    public E getItem(int position) {
         return listItems.get(position);
     }
 
@@ -39,13 +39,14 @@ public class ToDoList implements List {
         return getListItems().size();
     }
 
-    public ArrayList<ListItem> getListItems() {
+    public ArrayList<E> getListItems() {
         return listItems;
     }
 
-    public void setListItems(ArrayList<ListItem> listItems) {
+    public void setListItems(ArrayList<E> listItems) {
         this.listItems=null;
         this.listItems = listItems;
     }
+
 
 }

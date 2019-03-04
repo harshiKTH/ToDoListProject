@@ -7,16 +7,27 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public  class ListItem implements Serializable{
+public  class Task implements Serializable{
 
     private Date dueDate = null;
-    private String task = null;
+    private String taskName = null;
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    private String projectName = null;
+
     String status="";
     Locale locale = new Locale("en", "US");
     DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
 
 
-    public ListItem(){
+    public Task(){
         this.status = Constants.STATUS_PENDING;
     }
     public  String getStatus() {
@@ -33,12 +44,12 @@ public  class ListItem implements Serializable{
         this.dueDate = dueDate;
     }
 
-    public String getTask() {
-        return task;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTask(String task) {
-        this.task = task;
+    public void setTaskName(String taskName)  {
+        this.taskName = taskName;
     }
 
     public void setStatus(String status) {

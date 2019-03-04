@@ -1,11 +1,9 @@
 package com.todolist.abstractclasses;
 
-import com.todolist.object.ListItem;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public abstract class UserInterface {
+public abstract class UserInterface<E> {
     private Scanner scanner;
 
     public UserInterface(){
@@ -23,9 +21,12 @@ public abstract class UserInterface {
 
     public abstract void userMenu();
 
-    public abstract void printList(ArrayList<ListItem> list);
+    public abstract void printList(ArrayList<E> list);
+
+    public void notificationMessage(String message){
+        System.out.println(message);
+    }
 
 
-
-
+    protected abstract void sortTaskByProject(String userInput);
 }

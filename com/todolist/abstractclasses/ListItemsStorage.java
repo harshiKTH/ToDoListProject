@@ -1,15 +1,13 @@
 package com.todolist.abstractclasses;
 
-import com.todolist.object.ListItem;
-
 import java.io.*;
 import java.util.ArrayList;
 
-public abstract class ListItemsStorage implements Serializable {
+public abstract class ListItemsStorage<E> implements Serializable {
 
-    public abstract boolean storeList(ArrayList<ListItem> listItems);
+    public abstract boolean storeList(ArrayList<E> listItems);
 
-    public abstract ArrayList<ListItem> loadList();
+    public abstract ArrayList<E> loadList();
 
 
 }
