@@ -1,13 +1,16 @@
 package com.todolist.controller;
 
+
 import com.todolist.literals.Constants;
-import com.todolist.object.Task;
-import com.todolist.object.ToDoList;
+import com.todolist.ModelClasses.Task;
+import com.todolist.ModelClasses.ToDoList;
 import com.todolist.abstractclasses.UserInterface;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 
 
@@ -60,7 +63,7 @@ public class ListController<E> extends UserInterface<E> {
                    listController.notificationMessage("To do list saving failure due to system error...");
                }
             }else if (userInput.equals("9")) { //Sort task by project
-            listController.sortTaskByProject(listController.getUserInput("Enter project name to sort  :"));
+            listController.sortTaskByProject();
         }
 
 
@@ -162,6 +165,7 @@ public class ListController<E> extends UserInterface<E> {
         System.out.print("\n");
         System.out.println("*****************************************************************************");
         System.out.print("\n");
+        
         for (E listItem : arrayList) {
             Task tmpTask = (Task) listItem;
             System.out.printf("%-5s %-15s %-15s %-10s %-30s", listNumber++,tmpTask.getProjectName(), tmpTask.getDueDate(), tmpTask.getStatus(), tmpTask.getTaskName() + "\n");
@@ -173,19 +177,8 @@ public class ListController<E> extends UserInterface<E> {
     }
 
     @Override
-    protected void sortTaskByProject(String userInput) {
-        Comparator<Task> comparator = new Comparator<Task>() {
-            @Override
-            public int compare(Task o1, Task o2) {
-
-                if(o1.getProjectName().equals(o2.getProjectName()))
-                    return 0;
-                else
-                    return -1;
-            }
-        };
-
-        listController.toDoList.getListItems().sort(comparator);
+    protected void sortTaskByProject() {
+        listController.toDoList.getListItems().sort(Comparator.comparing(Task::getProjectName));
     }
 
     public int getNumItemsInList(String status){
