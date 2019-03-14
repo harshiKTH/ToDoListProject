@@ -1,98 +1,85 @@
 package com.todolist.controller;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import com.todolist.abstractclasses.ListItemsStorage;
 
 public class ListItemStorageController<E> extends ListItemsStorage<E> {
+    private static final long serialVersionUID = -3L;
 
-    URL url ;
-    private File file = null;
 
-    public ListItemStorageController() throws IOException {
-        String directory=System.getProperty("user.dir");
 
-        try {
-            file = new File(directory + "FileStore");
-        }catch (Exception e){
-            file.createNewFile();
-        }
+    private File file;
+    public ListItemStorageController(String path)  {
+        file =  new File(path);
+
+
+
+    }
+    public ListItemStorageController()  {
+        file =  new File("FileStore.txt");
+
 
 
     }
 
     @Override
-    public boolean storeList(ArrayList<E> listItems) {
-        // write object to file
-        FileOutputStream fos = null;
-        boolean isSuccess=true;
+    public boolean storeList(ArrayList<E> listItems)
+    {
+        boolean succes = true;
+
         try {
-            fos = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(fos);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
             oos.writeObject(listItems);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
+
+            fos.close();
             oos.close();
+
+
         } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
+            System.out.println("the file doesn't exist before");
+            succes = false;
         }
-        return isSuccess;
+
+        return succes;
+
 
     }
 
+
     @Override
-    public ArrayList<E> loadList() {
-        FileInputStream fis = null;
+    public ArrayList<E> loadList()
+    {
         boolean isSuccess=true;
-        ObjectInputStream ois = null;
         ArrayList<E> result = new ArrayList<E>();
-        System.out.println(file.getAbsolutePath());
 
         try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            isSuccess=false;
-            return result;
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            System.out.println(file.getAbsolutePath());
 
-        }
-
-        try {
-            ois = new ObjectInputStream(fis);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
             result = (ArrayList<E>) ois.readObject();
-            return result;
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
+
+            fis.close();
             ois.close();
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
+
         }
+        catch (EOFException e)
+        {
+            System.out.println("The file is empty");
+        }
+        catch (IOException e) {
+            System.out.println("can't find the file ");
+            //e.printStackTrace();
+        }
+        catch (ClassNotFoundException e) {
+            //e.printStackTrace();
+        }
+
+
+
         return result;
     }
 }

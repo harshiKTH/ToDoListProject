@@ -15,6 +15,23 @@ public abstract class UserInterface<E> {
         return scanner.nextLine();
     }
 
+    public  int getuserInt(int min,int max,String message)
+    {
+
+        boolean con=true;
+        int ret=0;
+        while(con)
+        {
+            System.out.println(message + "between (" + min + "-" + max + ")");
+            ret =scanner.nextInt();
+            if( min <= ret && max >= ret)
+                    break;
+        }
+        return ret;
+    }
+
+    // UserInterface.getUserInput
+
     public abstract boolean clearScreen();
 
     public abstract boolean updateScreen();
@@ -28,5 +45,7 @@ public abstract class UserInterface<E> {
     }
 
 
-    protected abstract void sortTaskByProject(String userInput);
+    protected abstract void sortTaskByProject();
+
+    public abstract void sortTaskByDate();
 }

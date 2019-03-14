@@ -5,13 +5,12 @@ import com.todolist.literals.Constants;
 import com.todolist.ModelClasses.Task;
 import com.todolist.ModelClasses.ToDoList;
 import com.todolist.abstractclasses.UserInterface;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.stream.IntStream;
+import static com.todolist.literals.Constants.STATUS_DONE;
 
 
 public class ListController<E> extends UserInterface<E> {
@@ -35,8 +34,10 @@ public class ListController<E> extends UserInterface<E> {
 
 
         while (!isQuit) {
+
             listController.userMenu();
             userInput = listController.getUserInput("\nEnter your choice : ");
+
             if (userInput.equals("0") || userInput.equalsIgnoreCase("q")) {
                 isQuit = true;
                 listController.listItemStorageController.storeList(listController.toDoList.getListItems());
@@ -48,7 +49,8 @@ public class ListController<E> extends UserInterface<E> {
             } else if (userInput.equals("3")) { //Remove list item
                 listController.removeListItem();
             } else if (userInput.equals("4")) { //Edit list item
-                listController.editListItem(Integer.parseInt(listController.getUserInput("Enter item number to edit :")));
+                //listController.editListItem(Integer.parseInt(listController.getUserInput("Enter item number to edit :")));
+                listController.editListItem(listController.getuserInt(1,listController.toDoList.getListItems().size(),"Enter task "));
             } else if (userInput.equals("5")) { //Show all list items
                 listController.printList(listController.toDoList.getListItems());
             } else if (userInput.equals("6")) { //Mark a task status to done
@@ -62,9 +64,14 @@ public class ListController<E> extends UserInterface<E> {
                } else {
                    listController.notificationMessage("To do list saving failure due to system error...");
                }
-            }else if (userInput.equals("9")) { //Sort task by project
-            listController.sortTaskByProject();
-        }
+            }
+            else if (userInput.equals("9")) {//Sort task by project
+                listController.sortTaskByProject();
+            }
+            else if (userInput.equals("10")) { //Sort task by date
+                listController.sortTaskByDate();}
+
+
 
 
         }
@@ -113,7 +120,7 @@ public class ListController<E> extends UserInterface<E> {
         try {
             Task tempTask;
             tempTask = (Task) listController.toDoList.getItem(listItemNum-1);
-            tempTask.setStatus(Constants.STATUS_DONE);
+            tempTask.setStatus(STATUS_DONE);
             listController.toDoList.editItem(listItemNum, tempTask);
             return true;
         }catch (Exception e){
@@ -154,6 +161,7 @@ public class ListController<E> extends UserInterface<E> {
                 "(7) Mark a task not completed\n "+
                 "(8) Save Current List\n " +
                 "(9) Sort task by project\n " +
+                "(10) Sort task by date\n " +
                 "(0|Q|q) Quit\n ");
     }
 
@@ -165,31 +173,37 @@ public class ListController<E> extends UserInterface<E> {
         System.out.print("\n");
         System.out.println("*****************************************************************************");
         System.out.print("\n");
-        
-        for (E listItem : arrayList) {
-            Task tmpTask = (Task) listItem;
-            System.out.printf("%-5s %-15s %-15s %-10s %-30s", listNumber++,tmpTask.getProjectName(), tmpTask.getDueDate(), tmpTask.getStatus(), tmpTask.getTaskName() + "\n");
-            System.out.print("\n");
-        }
-        System.out.println();
-        //list.forEach(System.out::println);
 
+        ArrayList<Task> myList = (ArrayList<Task>) listController.toDoList.getListItems();
+        IntStream.range(0, myList.size())
+                .forEach(idx ->
+                         System.out.format("%-5s %-15s %-15s %-10s %-30s\n", (idx+1),
+                                 myList.get(idx).getProjectName(), myList.get(idx).getDueDate(),
+                                 myList.get(idx).getStatusString(), myList.get(idx).getTaskName())
+
+                        );
     }
 
     @Override
     protected void sortTaskByProject() {
+        // sort by project name
         listController.toDoList.getListItems().sort(Comparator.comparing(Task::getProjectName));
     }
 
-    public int getNumItemsInList(String status){
-        int num=0;
-        for (int i=0; i< listController.toDoList.getListItems().size();i++) {
-            Task tmpTask = (Task)listController.toDoList.getListItems().get(i);
-            if(tmpTask.getStatus().contains(status)){
-                num++;
-            }
+    @Override
+    public void sortTaskByDate() {
+        listController.toDoList.getListItems().sort(Comparator.comparing(Task::getDueDate));
+    }
 
-        }
-        return num;
+    public int getNumItemsInList(Constants status)
+    {
+        ArrayList<Task> myList = (ArrayList<Task>) listController.toDoList.getListItems();
+
+       int doneTask = (int)myList
+               .stream()
+               .filter(task -> task.getStatus().equals(status))
+               .count();
+
+        return doneTask;
     }
 }

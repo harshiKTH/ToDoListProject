@@ -1,6 +1,7 @@
-package com.todolist.object;
+package com.todolist.ModelClasses;
 
 import com.todolist.interfaces.List;
+
 
 import java.util.ArrayList;
 
