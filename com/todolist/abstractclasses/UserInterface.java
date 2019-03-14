@@ -1,6 +1,9 @@
 package com.todolist.abstractclasses;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public abstract class UserInterface<E> {
@@ -30,6 +33,23 @@ public abstract class UserInterface<E> {
                     break;
         }
         return ret;
+    }
+
+
+    //function to get validated date from user
+    public Date getDate(String message) throws ParseException {
+        Date date = new Date();
+        boolean con=true;
+        System.out.println(message);
+        while(con)
+        {
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
+            if( date.after(new Date()))
+                break;
+            System.out.println("Entered date is already passed, enter valid date ");
+        }
+
+        return date;
     }
 
     //method for clear the screen
