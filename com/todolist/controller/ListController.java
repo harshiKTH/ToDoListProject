@@ -102,7 +102,7 @@ public class ListController<E> extends UserInterface<E> {
         try {
             tempTask.setProjectName(listController.getUserInput("Enter Project Name"));
             tempTask.setTaskName(listController.getUserInput("Enter Task"));
-            tempTask.setDueDate(new SimpleDateFormat("dd/MM/yyyy").parse(listController.getUserInput("Enter task date \"dd/MM/yyyy\"")));
+            tempTask.setDueDate(listController.getDate("Enter date to be completed \"dd/MM/yyyy\""));
             listController.toDoList.addItem(tempTask);
         } catch (Exception e) {
             System.out.println("Invalid data format entered");
