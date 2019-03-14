@@ -46,7 +46,7 @@ public abstract class UserInterface<E> {
             date = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
             if( date.after(new Date()))
                 break;
-            System.out.println("Entered date is already passed, enter valid date ");
+            System.out.println("Entered date is already passed, Please enter a valid date !!! ");
         }
 
         return date;

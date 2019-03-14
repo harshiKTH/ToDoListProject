@@ -128,9 +128,13 @@ public class ListController<E> extends UserInterface<E> {
     //method to remove a task from the task list, called by user menu option
     private void removeListItem(int position) {
         listController.printList(listController.toDoList.getListItems());
-        if (position > 0 && position <= listController.toDoList.listCount())
-            listController.toDoList.removeItem(position - 1);
-        else
+        if (position > 0 && position <= listController.toDoList.listCount()) {
+            if (listController.toDoList.removeItem(position - 1)) {
+                listController.notificationMessage("Task number " + position + " removed ");
+            } else {
+                listController.notificationMessage("Task number " + position + " not removed ");
+            }
+        } else
             System.out.println("Number entered not in range \n" + "##############################");
     }
 
@@ -174,13 +178,13 @@ public class ListController<E> extends UserInterface<E> {
     @Override
     public void userMenu() {
         System.out.print("\n (1) Show Menu\n " +
-                "(2)  Add List Item\n " +
-                "(3)  Remove List Item\n " +
-                "(4)  Edit List Item\n " +
-                "(5)  Show List Items\n " +
+                "(2)  Add a task\n " +
+                "(3)  Remove a task\n " +
+                "(4)  Edit a task\n " +
+                "(5)  Show All tasks\n " +
                 "(6)  Mark a task completed\n " +
                 "(7)  Mark a task not completed\n " +
-                "(8)  Save Current List\n " +
+                "(8)  Save current tasks\n " +
                 "(9)  Sort task by project\n " +
                 "(10) Sort task by date\n " +
                 "(0|Q|q) Quit\n ");
