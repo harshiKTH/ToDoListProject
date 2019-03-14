@@ -18,7 +18,6 @@ public  class Task implements Serializable{
     private Date dueDate = null;
     private String taskName = null;
 
-
     public Task(String title, String project, Date date, Constants status)
     {
         this.taskName = title;
@@ -27,12 +26,9 @@ public  class Task implements Serializable{
         this.status = status;
     }
 
-
     public Task(){
         this.status = Constants.STATUS_PENDING;
     }
-
-
 
     public String getProjectName() {
         return projectName;
@@ -42,13 +38,9 @@ public  class Task implements Serializable{
         this.projectName = projectName;
     }
 
-
     public  Constants getStatus() {
         return status;
     }
-
-
-
 
     public String getDueDate() {
 
@@ -71,6 +63,7 @@ public  class Task implements Serializable{
     public void setStatus(Constants status) {
         this.status = status;
     }
+
 
     public String getStatusString()
     {
