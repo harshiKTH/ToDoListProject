@@ -38,18 +38,19 @@ public abstract class UserInterface<E> {
 
     //function to get validated date from user
     public Date getDate(String message) throws ParseException {
-        Date date = new Date();
+        Date currDate = new Date();
+        Date userEnteredDate = null ;
         boolean con=true;
         System.out.println(message);
         while(con)
         {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
-            if( date.after(new Date()))
+            userEnteredDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
+            if( userEnteredDate.after(new Date()))
                 break;
             System.out.println("Entered date is already passed, Please enter a valid date !!! ");
         }
 
-        return date;
+        return userEnteredDate;
     }
 
     //method for clear the screen
