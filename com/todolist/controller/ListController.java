@@ -189,8 +189,8 @@ public class ListController<E> extends UserInterface<E> {
                 "(6)  Mark a task completed\n " +
                 "(7)  Mark a task not completed\n " +
                 "(8)  Save current tasks\n " +
-                "(9)  Sort task by project\n " +
-                "(10) Sort task by date\n " +
+                "(9)  Sort tasks by project\n " +
+                "(10) Sort tasks by date\n " +
                 "(0|Q|q) Quit\n ");
     }
 
