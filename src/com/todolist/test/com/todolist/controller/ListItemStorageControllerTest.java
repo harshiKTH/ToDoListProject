@@ -1,7 +1,8 @@
-package com.todolist.controller;
+package com.todolist.test.com.todolist.controller;
 
 import com.todolist.ModelClasses.Task;
 import com.todolist.ModelClasses.ToDoList;
+import com.todolist.controller.ListItemStorageController;
 import com.todolist.literals.Constants;
 import org.junit.Before;
 import org.junit.Test;
