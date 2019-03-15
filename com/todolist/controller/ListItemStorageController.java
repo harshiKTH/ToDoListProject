@@ -1,97 +1,59 @@
 package com.todolist.controller;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
-import com.todolist.object.ListItem;
+
 import com.todolist.abstractclasses.ListItemsStorage;
 
-public class ListItemStorageController extends ListItemsStorage {
+public class ListItemStorageController<E> extends ListItemsStorage<E> {
+    private static final long serialVersionUID = -3L;
+    private File file;
 
-    URL url ;
-    File file = null;
-
-    public ListItemStorageController() throws IOException {
-        String directory=System.getProperty("user.dir");
-
-        try {
-            file = new File(directory + "FileStore");
-        }catch (Exception e){
-            file.createNewFile();
-        }
-
-
+    //initialise a file to store the user list for permanent storage
+    public ListItemStorageController(String path) {
+        file = new File(path);
     }
 
+    //set file name to be used for permanent storage
+    public ListItemStorageController() {
+        file = new File("FileStore.txt");
+    }
+
+    //methos to store the itesm passed in array lust
     @Override
-    public boolean storeList(ArrayList<ListItem> listItems) {
-        // write object to file
-        FileOutputStream fos = null;
-        boolean isSuccess=true;
+    public boolean storeList(ArrayList<E> listItems) {
+        boolean succes = true;
         try {
-            fos = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(fos);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(listItems);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
+            fos.close();
             oos.close();
         } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
+            System.out.println("the file doesn't exist before");
+            succes = false;
         }
-        return isSuccess;
 
+        return succes;
     }
 
+    //method to load the initial object list from the permanent storage
     @Override
-    public ArrayList<ListItem> loadList() {
-        FileInputStream fis = null;
-        boolean isSuccess=true;
-        ObjectInputStream ois = null;
-        ArrayList<ListItem> result = new ArrayList<ListItem>();
-
+    public ArrayList<E> loadList() {
+        ArrayList<E> result = new ArrayList<E>();
         try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            isSuccess=false;
-            return result;
-
-        }
-
-        try {
-            ois = new ObjectInputStream(fis);
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        }
-        try {
-            result = (ArrayList<ListItem>) ois.readObject();
-            return result;
-        } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            System.out.println(file.getAbsolutePath());
+            result = (ArrayList<E>) ois.readObject();
+            fis.close();
             ois.close();
+        } catch (EOFException e) {
+            System.out.println("The file is empty");
         } catch (IOException e) {
-            isSuccess=false;
-            e.printStackTrace();
+            System.out.println("can't find the file ");
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getCause());
         }
         return result;
     }

@@ -1,14 +1,12 @@
 package com.todolist.interfaces;
 
-import com.todolist.object.ListItem;
-
-public interface List {
+public interface List<E> {
 
 
-    boolean addItem(ListItem listItem);
+    boolean addItem(E item);
     boolean removeItem(int position);
-    ListItem editItem(int position,ListItem listItem);
-    ListItem getItem(int position);
+    E editItem(int position,E listItem);
+    E getItem(int position);
     int listCount();
 
 
